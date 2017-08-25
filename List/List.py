@@ -21,10 +21,36 @@ class List:
     1 5 
     >>> lst.remove()
     1
+    >>> lst.stats()
+    1
+    >>> lst.insert(10)
+    >>> lst.stats()
+    2
+    >>> a = List()
+    >>> b = List()
+    >>> a.insert(5)
+    >>> b.insert(10)
+    >>> c = List.merge(a, b)
+    >>> c
+    5 10 
     >>> l1 = List()
     >>> import random
     >>> for i in range(1000):
     ...   l1.insert(random.randrange(10000))
+    >>> l1_sorted = List.merge_sort(l1)
+    >>> l1_sorted.stats()
+    1000
+    >>> lst = List()
+    >>> lst.insert(100)
+    >>> lst.insert(500)
+    >>> lst.insert(-10)
+    >>> lst.insert(50)
+    >>> lst
+    100 500 -10 50 
+    >>> lst = lst.merge_sort()
+    >>> lst
+    -10 50 100 500 
+    >>> 
     """
     
     default_compare = lambda a, b: -1 if a < b else 1 if a > b else 0
@@ -96,6 +122,7 @@ class List:
             startoflist = False
             current = empty
             tail = empty
+            self.tail = empty
         del ptr
         return val
     
@@ -165,10 +192,8 @@ class List:
         return self.display()
         
     def split_list(self, l1):
-        val1 = None
         val2 = None
-        flag = 1
-        
+        flag = 1  
         if self.is_empty():
             return
         val1 = self.remove()
@@ -177,7 +202,7 @@ class List:
         else:
             val2 = self.remove()
         self.split_list(l1)
-        l1.insert(v1)
+        l1.insert(val1)
         if flag:
             self.insert(val2)
     
@@ -189,16 +214,16 @@ class List:
         return False
     
     def peek(self):
-        if tail is empty:
+        if self.tail is empty:
             return empty
-        return tail.next.val
+        return self.tail.next.val
         
     def stats(self):
         if self.tail is empty:
             return 0
         count = 0
         p = self.tail.next
-        while p != tail:
+        while p != self.tail:
             count += 1
             p = p.next
         return count + 1
@@ -207,24 +232,29 @@ class List:
         v1 = None
         v2 = None
         v = None
-        q = empty
+        q = List()
         
         if q1.is_empty():
             return q2
         if q2.is_empty():
             return q1
         
-        v1 = q1.peek()
-        v2 = q2.peek()
-        if eval_fn(v1) < eval_fn(v2):
-            v = q1.remove()
-            q = merge(q1, q2, val)
-            q.insertfront(v)
-            return q
-        v = q2.remove()
-        q = merge(q2, q2, val)
-        q.insertfront(v)
+        while not q1.is_empty() and not q2.is_empty():
+            v1 = q1.peek()
+            v2 = q2.peek()
+            if eval_fn(v1, v2) < 0:
+                v = q1.remove()
+            else:
+                v = q2.remove()
+            q.insert(v)
+            
+        while not q1.is_empty():
+            q.insert(q1.remove())
+        while not q2.is_empty():
+            q.insert(q2.remove())
+        
         return q
+        
     
     def merge_sort(lst, eval_fn=default_compare):
         if lst is empty:
@@ -233,9 +263,9 @@ class List:
             return lst
         tmp = List()
         lst.split_list(tmp)
-        lst = mergeSort(lst, eval_fn)
-        tmp = mergeSort(temp, eval_fn)
-        lst = merge(lst, tmp, eval_fn)
+        lst = List.merge_sort(lst, eval_fn)
+        tmp = List.merge_sort(tmp, eval_fn)
+        lst = List.merge(lst, tmp, eval_fn)
         lst.current = lst.tail.next
         lst.startoflist = True
         return lst
