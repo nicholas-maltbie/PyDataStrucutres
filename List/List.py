@@ -26,6 +26,12 @@ class List:
     >>> lst.insert(10)
     >>> lst.stats()
     2
+    >>> lst.lookup(5)
+    True
+    >>> lst.remove()
+    5
+    >>> lst.lookup(5)
+    False
     >>> a = List()
     >>> b = List()
     >>> a.insert(5)
@@ -96,12 +102,14 @@ class List:
         """Looks up a value in the list.
         
         Returns True if the value is found otherwise False"""
+        if self.is_empty():
+            return False
         p = self.tail.next
         while p != self.tail:
-            if self.compare_fn(p.val, val):
+            if self.compare_fn(p.val, val) == 0:
                 return True
             p = p.next
-        if self.compare_fn(self.tail.val, val):
+        if self.compare_fn(self.tail.val, val) == 0:
             return True
         return False
     
@@ -141,16 +149,16 @@ class List:
         ptr = None
         p = self.tail
         while p.next != self.tail:
-            if self.compare_fn(p.next.val, val):
+            if self.compare_fn(p.next.val, val) == 0:
                 obj = p.next.val
                 ptr = p.next
                 p.next = p.next.next
                 del ptr
                 return obj
             p = p.next
-        if compare_fn(p.next.val, val):
+        if self.compare_fn(p.next.val, val) == 0:
             self.tail = p
-            obj = p.next.next
+            obj = p.next.val
             ptr = p.next
             p.next = p.next.next
             del ptr
