@@ -60,7 +60,7 @@ class List:
     """
     
     default_compare = lambda a, b: -1 if a < b else 1 if a > b else 0
-    default_disp = lambda x: str(x) + " "
+    default_disp = lambda x: str(x)
 
     def __init__(self, compare_fn=default_compare, display_fn=default_disp):
         """Creates a list
@@ -147,21 +147,19 @@ class List:
     def pop(self, val):
         obj = None
         ptr = None
-        p = self.tail
-        while p.next != self.tail:
+        if self.tail is empty:
+            return
+        p = self.tail.next
+        while p != self.tail:
             if self.compare_fn(p.next.val, val) == 0:
                 obj = p.next.val
                 ptr = p.next
                 p.next = p.next.next
-                del ptr
                 return obj
             p = p.next
-        if self.compare_fn(p.next.val, val) == 0:
-            self.tail = p
-            obj = p.next.val
-            ptr = p.next
-            p.next = p.next.next
-            del ptr
+        if self.compare_fn(self.tail.val, val) == 0:
+            obj = self.tail.val
+            self.tail = empty
             return obj
         return empty
         
@@ -182,19 +180,21 @@ class List:
     def is_empty(self):
         return self.tail is empty
     
+    def __iter__(self):
+        if self.tail is not empty:
+            p = self.tail.next
+            while p.next != self.tail.next:
+                yield p.val
+                p = p.next
+            yield self.tail.val
+            
     def display(self):
         if self.display_fn == None:
             return "No display"
         elif self.tail is empty:
             return "<>"
         else:
-            disp = ""
-            p = self.tail.next
-            while p.next != self.tail.next:
-                disp += self.display_fn(p.val)
-                p = p.next
-            disp += self.display_fn(self.tail.val)
-            return disp
+            return ", ".join([self.display_fn(val) for val in iter(self)])
     
     def __repr__(self):
         return self.display()
@@ -213,6 +213,9 @@ class List:
         l1.insert(val1)
         if flag:
             self.insert(val2)
+    
+    def __len__(self):
+        return self.stats();
     
     def one_element(self):
         if self.tail is empty:
