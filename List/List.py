@@ -103,15 +103,18 @@ class List:
         
         Returns True if the value is found otherwise False"""
         if self.is_empty():
-            return False
+            return None
         p = self.tail.next
         while p != self.tail:
             if self.compare_fn(p.val, val) == 0:
-                return True
+                return p.val
             p = p.next
         if self.compare_fn(self.tail.val, val) == 0:
-            return True
-        return False
+            return p.val
+        return None
+        
+    def __contains__(self, val):
+        return self.lookup(val) != None
     
     def remove(self):
         """Removes the current pointed at in the list

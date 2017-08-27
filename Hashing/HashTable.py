@@ -48,7 +48,7 @@ class HashTable:
         return self.hash_function(val) % self.size
     
     def add(self, val):
-        if self.lookup(val):
+        if val in self:
             return
         if len(self) == self.size:
             self.size = self.size * 2
@@ -68,10 +68,11 @@ class HashTable:
     
     def lookup(self, val):
         index = self.hash_fn(val)
-        return self.table[index] != None and self.table[index].lookup(val)
+        return (self.table[index].lookup(val) if \
+                self.table[index] != None and val in self.table[index] else None)
     
     def __contains__(self, val):
-        return self.lookup(val)
+        return self.lookup(val) != None
     
     def display(self):
         return ", ".join([str(l) for l in self.table if l != None and len(l) > 0]) \
@@ -84,7 +85,7 @@ class HashTable:
         return self.length
         
     def pop(self, val):
-        if self.lookup(val):
+        if val in self:
             self.length -= 1
             return self.table[self.hash_fn(val)].pop(val)
         return None

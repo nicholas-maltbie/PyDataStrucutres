@@ -9,7 +9,7 @@ class Node:
         size: size of subtree for inverted trees
     """
     
-    def __init__(self, val, next=None, parent=None, size=-1):
+    def __init__(self, val, next=None, parent=None, size=1):
         """
         Create a new node with a value ans possibly a next node
         
