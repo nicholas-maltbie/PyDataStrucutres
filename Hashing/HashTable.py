@@ -37,20 +37,33 @@ class HashTable:
     
     def __init__(self, size = 10, compare_fn = default_compare, hash_fn = default_hash,
             display_fn = default_disp):
-        self.table = [None for _ in range(size)]
+        self.table = [None] * size
         self.compare_fn = compare_fn
         self.size = size
         self.length = 0
-        self.hash_fn = lambda v: hash_fn(v) % size
+        self.hash_function = hash_fn
         self.display_fn = display_fn
-        
+    
+    def hash_fn(self, val):
+        return self.hash_function(val) % self.size
+    
     def add(self, val):
         if self.lookup(val):
             return
+        if len(self) == self.size:
+            self.size = self.size * 2
+            temp_table = self.table
+            self.table = [None] * self.size
+            self.length = 0
+            for l in temp_table:
+                if l:
+                    for elem in l:
+                        self.add(elem)
+            
         index = self.hash_fn(val)
         if self.table[index] == None:
             self.table[index] = List(self.compare_fn, self.display_fn)
-            self.length += 1
+        self.length += 1
         self.table[index].insert(val)
     
     def lookup(self, val):
