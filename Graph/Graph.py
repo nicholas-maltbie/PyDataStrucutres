@@ -22,7 +22,7 @@ class Vertex:
         self.obj = obj
         self.value_fn = value_fn
         self.compare_fn = compare_fn
-        self.neighbors = List(compare_fn)
+        self.neighbors = List(compare_fn=compare_fn)
         self.index = index
     
     def add_neighbor(self, edge):
