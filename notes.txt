@@ -1,0 +1,8 @@
+AVL tree - https://www.cs.usfca.edu/~galles/visualization/AVLtree.html
+    - Ensure the delta in height of subtrees is never more than one 
+      by rotating branches.
+
+Red Black tree - https://www.cs.usfca.edu/~galles/visualization/RedBlack.html
+    - Ensure that the longest path is at most twice the length of the shortest 
+      path by labeling nodes and rotating branches.
+
