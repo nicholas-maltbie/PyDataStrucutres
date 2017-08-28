@@ -52,13 +52,14 @@ class Heap:
         return self.elems[0]
     
     def pop(self):
-        obj = self.elems[0]
-        self.length -= 1
-        self.elems[0] = self.elems[len(self)]
-        self.elems[len(self)] = None
-        self.comp_down(0)
-        return obj
-    
+        if len(self) > 0:
+            obj = self.elems[0]
+            self.length -= 1
+            self.elems[0] = self.elems[len(self)]
+            self.elems[len(self)] = None
+            self.comp_down(0)
+            return obj
+        
     def __len__(self):
         return self.length
     

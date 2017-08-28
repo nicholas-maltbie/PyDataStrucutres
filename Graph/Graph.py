@@ -51,8 +51,8 @@ class Edge:
         return ", ".join([str(self.v1), str(self.v2), str(self.obj)])
 
 class Graph:
-    def __init__(self, edges = [], vertices = []):
-        self.edges = []
+    def __init__(self, edges = List(), vertices = List()):
+        self.edges = List()
         self.vertices = HashTable(hash_fn = lambda x: hash(x.obj), \
             compare_fn = lambda a, b: -1 if a.obj < b.obj else 1 if a.obj > b.obj else 0)
         for v in vertices:
@@ -61,7 +61,7 @@ class Graph:
             self.add_edge(edge)
     
     def add_edge(self, edge):
-        self.edges.append(edge)
+        self.edges.insert(edge)
         self.get_vertex(edge.v1.obj).add_neighbor(edge)
         self.get_vertex(edge.v2.obj).add_neighbor(edge)
     
@@ -72,14 +72,14 @@ class Graph:
         return self.vertices.lookup(Vertex(obj))
 
 def build_graph(graph_data):
-    vertices = set()
-    edges = []
+    vertices = HashTable()
+    edges = List()
     for line in graph_data.split('\n'):
         if line.strip():
             v1, v2, cost = (int(val) for val in line.strip().split(' '))
             vertices.add(Vertex(v1))
             vertices.add(Vertex(v2))
-            edges.append(Edge(Vertex(v1), Vertex(v2), cost))
+            edges.insert(Edge(Vertex(v1), Vertex(v2), cost))
 
     return Graph(edges, vertices)
 

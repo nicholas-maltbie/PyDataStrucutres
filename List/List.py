@@ -15,10 +15,10 @@ class List:
     <>
     >>> lst.insert(1)
     >>> print(lst)
-    1 
+    1
     >>> lst.insert(5)
     >>> print(lst)
-    1 5 
+    1, 5
     >>> lst.remove()
     1
     >>> lst.stats()
@@ -27,18 +27,17 @@ class List:
     >>> lst.stats()
     2
     >>> lst.lookup(5)
-    True
+    5
     >>> lst.remove()
     5
     >>> lst.lookup(5)
-    False
     >>> a = List()
     >>> b = List()
     >>> a.insert(5)
     >>> b.insert(10)
     >>> c = List.merge(a, b)
     >>> c
-    5 10 
+    5, 10
     >>> l1 = List()
     >>> import random
     >>> for i in range(1000):
@@ -52,10 +51,10 @@ class List:
     >>> lst.insert(-10)
     >>> lst.insert(50)
     >>> lst
-    100 500 -10 50 
+    100, 500, -10, 50
     >>> lst = lst.merge_sort()
     >>> lst
-    -10 50 100 500 
+    -10, 50, 100, 500
     >>> 
     """
     
@@ -98,6 +97,15 @@ class List:
             h = Node(val, self.tail.next)
             self.tail.next = h
 
+    def __iter__(self):
+        def gen():
+            p = self.tail.next
+            while p != self.tail:
+                yield p.val
+                p = p.next
+            yield p.val
+        return gen
+        
     def lookup(self, val):
         """Looks up a value in the list.
         

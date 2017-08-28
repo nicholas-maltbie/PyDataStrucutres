@@ -17,13 +17,12 @@ class HashTable:
     >>> table.length
     2
     >>> table.lookup(20)
-    True
+    20
     >>> table.pop(20)
     20
     >>> table.length
     1
     >>> table.lookup(20)
-    False
     >>> 50 in table
     True
     >>> len(table)
@@ -71,6 +70,12 @@ class HashTable:
         return (self.table[index].lookup(val) if \
                 self.table[index] != None and val in self.table[index] else None)
     
+    def __iter__(self):
+        for i in range(len(self.table)):
+            if self.table[i]:
+                for val in self.table[i]:
+                    yield val
+
     def __contains__(self, val):
         return self.lookup(val) != None
     

@@ -27,15 +27,21 @@ class Partition:
     
     def __init__(self, display_fn = default_display, hash_fn = default_hash,
         value_fn = lambda x: x):
+        self.subsets = 0
         self.table = HashTable(compare_fn = lambda a, b: \
             default_compare(value_fn(a.val), value_fn(b.val)), \
             hash_fn = lambda x: hash_fn(x.val), \
             display_fn = display_fn)
     
     def add(self, val):
-        node = Node(val)
-        node.parent = node
-        self.table.add(node)
+        if Node(val) not in self.table:
+            node = Node(val)
+            node.parent = node
+            self.table.add(node)
+            self.subsets += 1
+    
+    def __len__(self):
+        return self.table.length 
     
     def identify(self, node):
         rep = self.table.lookup(node)
@@ -47,13 +53,13 @@ class Partition:
         
         if p1 == p2 or p1 == None or p2 == None:
             return
-        
         if p1.size > p2.size:
             p2.parent = p1
             p1.size += p2.size
         else:
             p1.parent = p2
             p2.size += p1.size
+        self.subsets -= 1
     
     def __contains__(self, val):
         return Node(val) in self.table

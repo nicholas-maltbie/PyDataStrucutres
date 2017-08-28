@@ -6,6 +6,7 @@ Contains an example of a minimum spanning tree
 
 from Graph import Graph, Edge, Vertex, build_graph
 from Heap import Heap
+from List import List
 from Partition import Partition
 
 def solve_MST(graph):
@@ -17,9 +18,10 @@ def solve_MST(graph):
     part = Partition(value_fn = lambda v: v.obj,
                      hash_fn = lambda v: hash(v.obj))
     
-    final = []
+    final = List()
     
-    while len(heap) > 0:
+    while len(heap) > 0 or (len(final) == len(graph.vertices) and 
+            part.subsets == 1):
         edge = heap.pop()
         v1 = edge.v1
         v2 = edge.v2
@@ -27,16 +29,16 @@ def solve_MST(graph):
             part.add(v1)
             part.add(v2)
             part.set_union(v1, v2)
-            final.append(edge)
+            final.insert(edge)
         elif (v1 in part) ^ (v2 in part):
             if v1 not in part:
                 part.add(v1)
             if v2 not in part:
                 part.add(v2)
             part.set_union(v1, v2)
-            final.append(edge)
+            final.insert(edge)
         elif not part.redundant(v1, v2):
-            final.append(edge)
+            final.insert(edge)
             part.set_union(v1, v2)
             
     print(len(final))
