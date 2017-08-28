@@ -59,6 +59,9 @@ class Heap:
         self.comp_down(0)
         return obj
     
+    def __len__(self):
+        return self.length
+    
     def comp_up(self, node):
         parent = get_parent(node)
         if node == 0 or self.compare_fn(self.elems[node], self.elems[parent]) < 1:

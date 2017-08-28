@@ -37,12 +37,18 @@ class Vertex:
     def has_more_neighbors(self):
         return not neighbors.end_of_list()
     
+    def __repr__(self):
+        return str(self.obj)
+    
 class Edge:
     def __init__(self, v1, v2, obj = None, value_fn = lambda x: x):
         self.v1 = v1
         self.v2 = v2
-        self.obj = None
+        self.obj = obj
         self.value_fn = value_fn
+        
+    def __repr__(self):
+        return ", ".join([str(self.v1), str(self.v2), str(self.obj)])
 
 class Graph:
     def __init__(self, edges = [], vertices = []):
@@ -64,6 +70,18 @@ class Graph:
     
     def get_vertex(self, obj):
         return self.vertices.lookup(Vertex(obj))
+
+def build_graph(graph_data):
+    vertices = set()
+    edges = []
+    for line in graph_data.split('\n'):
+        if line.strip():
+            v1, v2, cost = (int(val) for val in line.strip().split(' '))
+            vertices.add(Vertex(v1))
+            vertices.add(Vertex(v2))
+            edges.append(Edge(Vertex(v1), Vertex(v2), cost))
+
+    return Graph(edges, vertices)
 
 if __name__ == "__main__":
     import doctest

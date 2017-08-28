@@ -1,6 +1,8 @@
 from HashTable import HashTable
 from Node import Node
 
+default_compare = lambda a, b: -1 if a < b else 1 if a > b else 0
+
 class Partition:
     """
     
@@ -21,12 +23,13 @@ class Partition:
     """
     
     default_display = lambda node: str(node.val)
-    default_hash = lambda node: hash(node.val)
-    default_compare = lambda a, b: -1 if a.val < b.val else 1 if a.val > b.val else 0
+    default_hash = lambda node: hash(node)
     
     def __init__(self, display_fn = default_display, hash_fn = default_hash,
-        compare_fn = default_compare):
-        self.table = HashTable(compare_fn = compare_fn, hash_fn = hash_fn,
+        value_fn = lambda x: x):
+        self.table = HashTable(compare_fn = lambda a, b: \
+            default_compare(value_fn(a.val), value_fn(b.val)), \
+            hash_fn = lambda x: hash_fn(x.val), \
             display_fn = display_fn)
     
     def add(self, val):
@@ -51,6 +54,9 @@ class Partition:
         else:
             p1.parent = p2
             p2.size += p1.size
+    
+    def __contains__(self, val):
+        return Node(val) in self.table
     
     def redundant(self, a, b):
         return self.identify(self.table.lookup(Node(a))) == \
