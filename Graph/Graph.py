@@ -72,7 +72,9 @@ class Graph:
         return self.vertices.lookup(Vertex(obj))
 
 def build_graph(graph_data):
-    vertices = HashTable()
+    vertices = HashTable(compare_fn = lambda a, b: 1 if a.obj > b.obj else 
+                                                   -1 if a.obj < b.obj else
+                                                   0)
     edges = List()
     for line in graph_data.split('\n'):
         if line.strip():

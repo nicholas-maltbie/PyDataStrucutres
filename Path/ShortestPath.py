@@ -27,8 +27,8 @@ class Path:
 
 def shortest_path(graph, start, end):
     queue = Heap(compare_fn= lambda p1, p2:
-                                1 if p1.get_cost() < p2.get_cost else
-                               -1 if p1.get_cost() > p2.get_cost else 0)
+                                1 if p1.get_cost() < p2.get_cost() else
+                               -1 if p1.get_cost() > p2.get_cost() else 0)
     checked = HashTable()    
     checked.add(start)
     for edge in graph.get_vertex(start).neighbors:
@@ -42,17 +42,19 @@ def shortest_path(graph, start, end):
     while len(queue) > 0:
         path = queue.pop()
         endpt = path.end
+        print(path.end)
         for edge in graph.get_vertex(endpt).neighbors:
             path_next = Path(path)
             new_end = edge.v1.obj
             if edge.v1.obj == endpt:
                 new_end = edge.v2.obj
+            path_next.add_edge(edge, new_end)
             if new_end not in checked:
-                path_next.add_edge(edge, new_end)
                 if new_end == end:
                     return path_next
                 queue.insert(path)
                 checked.add(new_end)
+            print(edge, '|', new_end, '|', new_end not in checked, len(queue))
     return None
             
         
