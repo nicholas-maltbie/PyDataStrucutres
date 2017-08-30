@@ -24,6 +24,9 @@ class Path:
     
     def get_cost(self):
         return sum([edge.obj for edge in self.edges])
+    
+    def __repr__(self):
+        return "\n".join([str(edge) for edge in self.edges]) + "\n" + str(self.get_cost())
 
 def shortest_path(graph, start, end):
     queue = Heap(compare_fn= lambda p1, p2:
@@ -38,23 +41,22 @@ def shortest_path(graph, start, end):
             endpt = edge.v2.obj
         path.add_edge(edge, endpt)
         queue.insert(path)
-        
+    
     while len(queue) > 0:
         path = queue.pop()
-        endpt = path.end
-        print(path.end)
-        for edge in graph.get_vertex(endpt).neighbors:
-            path_next = Path(path)
-            new_end = edge.v1.obj
-            if edge.v1.obj == endpt:
-                new_end = edge.v2.obj
-            path_next.add_edge(edge, new_end)
-            if new_end not in checked:
-                if new_end == end:
-                    return path_next
-                queue.insert(path)
-                checked.add(new_end)
-            print(edge, '|', new_end, '|', new_end not in checked, len(queue))
+        first = path.end
+        if first not in checked:
+            checked.add(first)
+            for edge in graph.get_vertex(first).neighbors:
+                path2 = Path(path)
+                other = edge.v1.obj
+                if edge.v1.obj == first:
+                    other = edge.v2.obj
+                path2.add_edge(edge, other)
+                if other == end:
+                    return path2
+                else:
+                    queue.insert(path2)
     return None
             
         
@@ -73,5 +75,6 @@ if __name__ == "__main__":
     """
     
     path = shortest_path(build_graph(graph_data), 3, 4)
+    print("Final path edges")
     print(path)
     
